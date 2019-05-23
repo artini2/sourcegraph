@@ -121,7 +121,7 @@ export function createPlatformContext(
         forceUpdateTooltip: () => {
             // TODO(sqs): implement tooltips on the browser extension
         },
-        createExtensionHost,
+        createExtensionHost: () => createExtensionHost(sourcegraphURL),
         getScriptURLForExtension: async bundleURL => {
             if (isInPage) {
                 return await createBlobURLForBundle(bundleURL)

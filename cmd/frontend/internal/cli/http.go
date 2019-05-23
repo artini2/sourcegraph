@@ -141,9 +141,15 @@ func secureHeadersMiddleware(next http.Handler) http.Handler {
 
 		if corsOrigin := conf.Get().CorsOrigin; corsOrigin != "" || isExtensionRequest {
 			w.Header().Set("Access-Control-Allow-Credentials", "true")
+			isCorsAllowedRequest := isAllowedOrigin(headerOrigin, strings.Fields(corsOrigin))
 
-			if isExtensionRequest || isAllowedOrigin(headerOrigin, strings.Fields(corsOrigin)) {
+			if isExtensionRequest || isCorsAllowedRequest {
 				w.Header().Set("Access-Control-Allow-Origin", headerOrigin)
+			}
+
+			// Allow loading iframes from a cors-allowed origin.
+			if isCorsAllowedRequest {
+				w.Header().Set("Content-Security-Policy", "frame-ancestors "+headerOrigin)
 			}
 
 			if r.Method == "OPTIONS" {

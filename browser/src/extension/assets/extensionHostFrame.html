@@ -1,0 +1,13 @@
+<script type="text/javascript">
+    const hostWorker = new Worker('/.assets/extension/scripts/extensionHostWorker.bundle.js')
+    window.addEventListener('message', ({ data }) => {
+        const { type, payload } = data
+        switch (type) {
+            case 'workerInit':
+                hostWorker.postMessage(payload)
+                break
+            default:
+                console.error('Unknown message type', type)
+        }
+    })
+</script>
